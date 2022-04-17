@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Rating</title>
+    <style>
+      :root {
+        --mobile-width: 375px;
+        --desctop-width: 1440px;
+
+        --very-dark-blue: hsl(216, 12%, 8%);
+        --dark-blue: hsl(213, 19%, 18%);
+        --medium-grey: hsl(216, 12%, 40%);
+        --light-gray: hsl(217, 12%, 63%);
+        --white: hsl(0, 0%, 100%);
+        --primary: hsl(25, 97%, 53%);
+
+        --font-size: 15px;
+
+        --font-family: Overpass;
+        --font-weight-small: 400;
+        --font-weight-big: 700;
+      }
+
+      * {
+        font-family: var(--font-family);
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        vertical-align: baseline;
+        color: var(--white);
+      }
+
+      ol,
+      ul {
+        list-style: none;
+      }
+
+      .gap-20 {
+        gap: 20px;
+      }
+      .main {
+        background-color: var(--very-dark-blue);
+        width: 100vw;
+        height: 100vh;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+      .flex-center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .rating-star-container {
+        display: flex;
+        padding: 40px 20px;
+        flex-direction: column;
+        width: 25rem;
+        background-color: var(--dark-blue);
+        border-radius: 15px;
+      }
+
+      .title {
+        font-size: 28px;
+      }
+
+      .description {
+        color: var(--light-gray);
+      }
+
+      .circle {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 3rem;
+        height: 3rem;
+        border-radius: 1.5rem;
+        background-color: var(--medium-grey);
+      }
+
+      .rating-box {
+        display: flex;
+        flex-direction: row;
+        padding-bottom: 20px;
+        justify-content: space-between;
+      }
+
+      .rating-item:hover {
+        background-color: var(--primary);
+        color: var(--white);
+      }
+
+      .star:before {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        content: url('./assets/images/icon-star.svg');
+        font-size: 20px;
+        color: var(--primary);
+      }
+
+      .hoverable-submit {
+        background-color: var(--primary);
+        color: var(--white);
+        height: 40px;
+        border-radius: 20px;
+        text-transform: uppercase;
+      }
+
+      .hoverable {
+        cursor: pointer;
+      }
+
+      .hoverable-submit:hover {
+        background-color: var(--white);
+        color: var(--primary);
+      }
+
+      .main-image {
+        width: 200px;
+      }
+
+      .badge {
+        display: inline-flex;
+        background-color: var(--medium-grey);
+        color: var(--primary);
+        padding: 10px;
+        justify-content: center;
+        border-radius: 20px;
+      }
+
+      input[type='radio'] {
+        display: none;
+      }
+
+      input[type='radio']:checked + label {
+        color: var(--white);
+        background-color: var(--light-gray);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="main flex-center flex-center">
+      <form action="#" class="rating-form">
+        <section class="rating-star-container gap-20">
+          <div class="circle flex-center">
+            <div class="star"></div>
+          </div>
+          <h1 class="title">How did we do?</h1>
+          <p class="description">
+            Please let us know how we did with your support request. All
+            feedback is appreciated to help us improve our offering!
+          </p>
+          <fieldset class="rating-box">
+            <input type="radio" name="ratio" id="radio-1" value="1" />
+            <label for="radio-1" class="circle rating-item">1</label>
+            <input type="radio" name="ratio" value="2" id="radio-2" />
+            <label for="radio-2" class="circle rating-item">2</label>
+            <input type="radio" name="ratio" value="3" id="radio-3" />
+            <label for="radio-3" class="circle rating-item">3</label>
+            <input type="radio" name="ratio" value="4" id="radio-4" />
+            <label for="radio-4" class="circle rating-item">4</label>
+            <input type="radio" name="ratio" value="5" id="radio-5" />
+            <label for="radio-5" class="circle rating-item">5</label>
+          </fieldset>
+          <button class="hoverable-submit hoverable" type="submit">
+            Submit
+          </button>
+        </section>
+      </form>
+      <section
+        class="rating-star-container flex-center gap-20 hidden thank-modal"
+      >
+        <figure class="flex-center">
+          <img
+            class="main-image"
+            src="./assets/images/illustration-thank-you.svg"
+            alt="illustration-thank-you 이미지"
+          />
+        </figure>
+        <div>
+          <span class="badge">You selected 0 out of 5</span>
+        </div>
+        <h1 class="title">Thank you!</h1>
+        <p class="description">
+          We appreciate you taking the time to give a rating. If you ever need
+          more support, don’t hesitate to get in touch!
+        </p>
+      </section>
+    </main>
+  </body>
+  <script>
+    const formState = {ratio: null};
+    const CONSTANTS = {
+      hidden: 'hidden',
+      events: {submit: 'submit'},
+      formStateKey: {ratio: 'ratio'},
+    };
+
+    const getBadgeText = ratioValue => `You selected ${ratioValue} out of 5`;
+
+    const form = document.querySelector('.rating-form');
+    const modal = document.querySelector('.thank-modal');
+    const badge = document.querySelector('.badge');
+
+    form.addEventListener(CONSTANTS.events.submit, e => {
+      e.preventDefault();
+      const data = new FormData(form);
+      if (!data.has(CONSTANTS.formStateKey.ratio)) {
+        return;
+      }
+      if (!data.get(CONSTANTS.formStateKey.ratio)) {
+        return;
+      }
+      formState.ratio = data.get(CONSTANTS.formStateKey.ratio);
+      form.classList.toggle(CONSTANTS.hidden);
+      modal.classList.toggle(CONSTANTS.hidden);
+      badge.textContent = getBadgeText(formState.ratio);
+    });
+  </script>
+</html>
